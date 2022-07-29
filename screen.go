@@ -21,7 +21,7 @@ func (screen *OutputScreen) AddText(s string) {
 	if len(screen.Text) == 0 {
 		screen.Text = s
 	} else {
-		screen.Text = s + "\n" + screen.Text
+		screen.Text = screen.Text + "\n" + s
 	}
 }
 
@@ -32,7 +32,7 @@ func (screen OutputScreen) UpdateTitle() {
 // Concurrency(app.Draw), do not call in main thread
 func (screen OutputScreen) RefreshText() {
 	screen.SetText(screen.Text)
-	screen.ScrollToBeginning()
+	screen.ScrollToEnd()
 	app.Draw()
 }
 
