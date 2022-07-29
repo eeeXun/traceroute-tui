@@ -7,9 +7,10 @@ import (
 )
 
 var (
-	// Ping
-	ProtocolICMP      = 1 // from https://pkg.go.dev/golang.org/x/net/internal/iana
-	MaxTTL       int8 = 30
+	// TraceRoute
+	ProtocolICMP               = 1 // from https://pkg.go.dev/golang.org/x/net/internal/iana
+	MaxTTL                int8 = 30
+	traceroute_thread_cnt      = 0
 	// UI
 	app        = tview.NewApplication()
 	input_box  = tview.NewInputField()

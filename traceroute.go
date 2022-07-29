@@ -11,6 +11,7 @@ func TraceRoute(dest string) {
 	if err != nil {
 		output_box.AddText(err.Error())
 		output_box.RefreshText()
+		stop_traceroute = true
 		return
 	}
 	output_box.SetTitle(fmt.Sprintf(
@@ -26,6 +27,7 @@ func TraceRoute(dest string) {
 
 	for i := 1; i <= int(MaxTTL); i++ {
 		if stop_traceroute {
+			traceroute_thread_cnt--
 			return
 		}
 
@@ -58,6 +60,8 @@ func TraceRoute(dest string) {
 				"Total hops: %d",
 				i))
 			output_box.RefreshText()
+			stop_traceroute = true
+			traceroute_thread_cnt--
 			return
 		default:
 			output_box.AddText("Unknown ICMP type")
@@ -66,4 +70,6 @@ func TraceRoute(dest string) {
 	}
 	output_box.AddText("Too many hops")
 	output_box.RefreshText()
+	stop_traceroute = true
+	traceroute_thread_cnt--
 }

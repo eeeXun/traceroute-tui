@@ -35,9 +35,12 @@ func UIInit() {
 func InputDoneHandle(key tcell.Key) {
 	switch key {
 	case tcell.KeyEnter:
-		stop_traceroute = false
-		dest := input_box.GetText()
-		go TraceRoute(dest)
+		if stop_traceroute && traceroute_thread_cnt == 0 {
+			stop_traceroute = false
+			traceroute_thread_cnt++
+			dest := input_box.GetText()
+			go TraceRoute(dest)
+		}
 	case tcell.KeyTab, tcell.KeyBacktab:
 		app.SetFocus(output_box)
 	case tcell.KeyEscape:
@@ -47,7 +50,7 @@ func InputDoneHandle(key tcell.Key) {
 
 func InputCaptureHandle(event *tcell.EventKey) *tcell.EventKey {
 	key := event.Key()
-	
+
 	switch key {
 	case tcell.KeyCtrlD, tcell.KeyCtrlS:
 		stop_traceroute = true
