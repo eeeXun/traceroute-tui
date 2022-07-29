@@ -9,8 +9,7 @@ import (
 func TraceRoute(dest string) {
 	dest_addr, err := net.ResolveIPAddr("ip", dest)
 	if err != nil {
-		output_box.AddText(err.Error())
-		output_box.RefreshText()
+		output_box.AddText(err.Error()).RefreshText()
 		stop_traceroute = true
 		return
 	}
@@ -20,6 +19,12 @@ func TraceRoute(dest string) {
 		dest_addr.String(),
 		MaxTTL,
 	))
+	output_box.AddText(fmt.Sprintf(
+		"TraceRoute to %s (%s), %d hop max",
+		dest,
+		dest_addr.String(),
+		MaxTTL,
+	)).RefreshText()
 
 	send_data := PingSendData{
 		addr: dest_addr,
@@ -37,8 +42,8 @@ func TraceRoute(dest string) {
 			output_box.AddText(fmt.Sprintf(
 				"%d: Error, %s",
 				i,
-				err.Error()))
-			output_box.RefreshText()
+				err.Error(),
+			)).RefreshText()
 			continue
 		}
 
@@ -48,28 +53,28 @@ func TraceRoute(dest string) {
 				"%d: %s %.2fms",
 				i,
 				recv_data.name,
-				recv_data.duration))
-			output_box.RefreshText()
+				recv_data.duration,
+			)).RefreshText()
 		case ipv4.ICMPTypeEchoReply:
 			output_box.AddText(fmt.Sprintf(
 				"%d: %s %.2fms",
 				i,
 				recv_data.name,
-				recv_data.duration))
+				recv_data.duration,
+			))
 			output_box.AddText(fmt.Sprintf(
 				"Total hops: %d",
-				i))
-			output_box.RefreshText()
+				i,
+			)).RefreshText()
 			stop_traceroute = true
 			traceroute_thread_cnt--
 			return
 		default:
-			output_box.AddText("Unknown ICMP type")
-			output_box.RefreshText()
+			output_box.AddText("Unknown ICMP type").RefreshText()
 		}
 	}
-	output_box.AddText("Too many hops")
-	output_box.RefreshText()
+
+	output_box.AddText("Too many hops").RefreshText()
 	stop_traceroute = true
 	traceroute_thread_cnt--
 }

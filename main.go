@@ -8,15 +8,15 @@ import (
 
 var (
 	// TraceRoute
-	ProtocolICMP               = 1 // from https://pkg.go.dev/golang.org/x/net/internal/iana
-	MaxTTL                int8 = 30
-	traceroute_thread_cnt      = 0
+	ProtocolICMP      = 1 // from https://pkg.go.dev/golang.org/x/net/internal/iana
+	MaxTTL       int8 = 30
 	// UI
 	app        = tview.NewApplication()
 	input_box  = tview.NewInputField()
 	output_box = NewOutputScreen()
 	// Control
-	stop_traceroute = true
+	stop_traceroute       = true
+	traceroute_thread_cnt = 0
 	// Other
 	sec = time.Second
 )
