@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"golang.org/x/net/icmp"
 	"golang.org/x/net/ipv4"
 	"net"
@@ -19,7 +20,7 @@ type PingRecvData struct {
 	name      string
 }
 
-func Ping(ping_ctrl PingSendData) PingRecvData {
+func Ping(ping_ctrl PingSendData) (*PingRecvData, error) {
 	var (
 		send_msg = icmp.Message{
 			Type: ipv4.ICMPTypeEcho,
@@ -42,7 +43,7 @@ func Ping(ping_ctrl PingSendData) PingRecvData {
 
 	write_buffer, err := send_msg.Marshal(nil)
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
 	conn.SetTTL(ping_ctrl.seq)
 
@@ -51,22 +52,26 @@ func Ping(ping_ctrl PingSendData) PingRecvData {
 	conn.SetDeadline(time.Now().Add(3 * sec))
 	n, _, src, err := conn.ReadFrom(read_buffer)
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
 	duration = float64(time.Since(startTime).Nanoseconds()) / 1000000
 
 	read_msg, err := icmp.ParseMessage(ProtocolICMP, read_buffer[:n])
+	if err != nil {
+		return nil, err
+	}
 
 	names, err := net.LookupAddr(src.String())
 	if err != nil {
 		name = src.String()
 	} else {
-		name = names[0]
+		name = fmt.Sprintf("%s (%s)", src.String(), names[0])
 	}
 
-	return PingRecvData{
-		icmp_type: read_msg.Type,
-		duration:  duration,
-		name:      name,
-	}
+	return &PingRecvData{
+			icmp_type: read_msg.Type,
+			duration:  duration,
+			name:      name,
+		},
+		nil
 }

@@ -13,7 +13,7 @@ type OutputScreen struct {
 func NewOutputScreen() *OutputScreen {
 	return &OutputScreen{
 		TextView: tview.NewTextView(),
-		Title: "Ping",
+		Title: "TraceRoute",
 	}
 }
 

@@ -1,8 +1,8 @@
 package main
 
 import (
-	"golang.org/x/net/ipv4"
 	"fmt"
+	"golang.org/x/net/ipv4"
 	"net"
 )
 
@@ -11,8 +11,15 @@ func TraceRoute(dest string) {
 	if err != nil {
 		output_box.AddText(err.Error())
 		output_box.RefreshText()
-		app.Draw()
+		return
 	}
+	output_box.SetTitle(fmt.Sprintf(
+		"TraceRoute to %s (%s), %d hop max",
+		dest,
+		dest_addr.String(),
+		MaxTTL,
+	))
+
 	send_data := PingSendData{
 		addr: dest_addr,
 	}
@@ -23,7 +30,15 @@ func TraceRoute(dest string) {
 		}
 
 		send_data.seq = i
-		recv_data := Ping(send_data)
+		recv_data, err := Ping(send_data)
+		if err != nil {
+			output_box.AddText(fmt.Sprintf(
+				"%d: Error, %s",
+				i,
+				err.Error()))
+			output_box.RefreshText()
+			continue
+		}
 
 		switch recv_data.icmp_type {
 		case ipv4.ICMPTypeTimeExceeded:
@@ -49,4 +64,6 @@ func TraceRoute(dest string) {
 			output_box.RefreshText()
 		}
 	}
+	output_box.AddText("Too many hops")
+	output_box.RefreshText()
 }
