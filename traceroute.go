@@ -9,7 +9,7 @@ import (
 func TraceRoute(dest string) {
 	dest_addr, err := net.ResolveIPAddr("ip", dest)
 	if err != nil {
-		output_box.AddText(err.Error()).RefreshText()
+		output_box.AddText(err.Error()).AddText("").RefreshText()
 		stop_traceroute = true
 		return
 	}
@@ -32,6 +32,7 @@ func TraceRoute(dest string) {
 
 	for i := 1; i <= int(MaxTTL); i++ {
 		if stop_traceroute {
+			output_box.AddText("")
 			traceroute_thread_cnt--
 			return
 		}
@@ -65,7 +66,7 @@ func TraceRoute(dest string) {
 			output_box.AddText(fmt.Sprintf(
 				"Total hops: %d",
 				i,
-			)).RefreshText()
+			)).AddText("").RefreshText()
 			stop_traceroute = true
 			traceroute_thread_cnt--
 			return
@@ -74,7 +75,7 @@ func TraceRoute(dest string) {
 		}
 	}
 
-	output_box.AddText("Too many hops").RefreshText()
+	output_box.AddText("Too many hops").AddText("").RefreshText()
 	stop_traceroute = true
 	traceroute_thread_cnt--
 }
