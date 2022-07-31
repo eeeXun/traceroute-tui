@@ -36,7 +36,7 @@ func TraceRoute(dest string) {
 			return
 		}
 
-		send_data.seq = i
+		send_data.TTL = i
 		recv_data, err := Ping(send_data)
 		if err != nil {
 			output_box.AddText(fmt.Sprintf(

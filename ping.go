@@ -11,7 +11,7 @@ import (
 
 type PingSendData struct {
 	addr *net.IPAddr
-	seq  int
+	TTL  int
 }
 
 type PingRecvData struct {
@@ -26,7 +26,7 @@ func Ping(ping_ctrl PingSendData) (*PingRecvData, error) {
 			Type: ipv4.ICMPTypeEcho,
 			Code: 0,
 			Body: &icmp.Echo{
-				Seq: ping_ctrl.seq,
+				Seq: 1,
 				ID:  os.Getpid() & 0xFFFF,
 			},
 		}
@@ -45,7 +45,7 @@ func Ping(ping_ctrl PingSendData) (*PingRecvData, error) {
 	if err != nil {
 		return nil, err
 	}
-	conn.SetTTL(ping_ctrl.seq)
+	conn.SetTTL(ping_ctrl.TTL)
 
 	startTime := time.Now()
 	conn.WriteTo(write_buffer, nil, ping_ctrl.addr)
