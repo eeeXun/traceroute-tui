@@ -13,6 +13,10 @@ func TraceRoute(dest string) {
 		stop_traceroute = true
 		return
 	}
+	send_data := PingSendData{
+		addr: dest_addr,
+	}
+
 	output_box.SetTitle(fmt.Sprintf(
 		"TraceRoute to %s (%s), %d hop max",
 		dest,
@@ -25,10 +29,6 @@ func TraceRoute(dest string) {
 		dest_addr.String(),
 		MaxTTL,
 	)).RefreshText()
-
-	send_data := PingSendData{
-		addr: dest_addr,
-	}
 
 	for i := 1; i <= int(MaxTTL); i++ {
 		if stop_traceroute {
