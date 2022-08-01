@@ -11,6 +11,7 @@ func TraceRoute(dest string) {
 	if err != nil {
 		output_box.AddText(err.Error()).AddText("").RefreshText()
 		stop_traceroute = true
+		traceroute_thread_cnt--
 		return
 	}
 	send_data := PingSendData{
