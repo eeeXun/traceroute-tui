@@ -15,8 +15,8 @@ var (
 	input_box  = tview.NewInputField()
 	output_box = NewOutputScreen()
 	// Control
-	stop_traceroute       = true
-	traceroute_thread_cnt = 0
+	stop_traceroute       bool = true
+	traceroute_thread_cnt      = 0
 	// Other
 	sec = time.Second
 )
